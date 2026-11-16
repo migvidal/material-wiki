@@ -1,4 +1,4 @@
-package com.migvidal.materialwiki.ui.theme
+package com.migvidal.materialwiki.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
