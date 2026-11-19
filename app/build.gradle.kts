@@ -79,5 +79,6 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.okhttp)
+    implementation(libs.androidx.hilt.navigation.compose)
 
 }
