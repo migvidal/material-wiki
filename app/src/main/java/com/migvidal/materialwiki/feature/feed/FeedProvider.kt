@@ -2,8 +2,8 @@ package com.migvidal.materialwiki.feature.feed
 
 import android.util.Log
 import com.migvidal.materialwiki.core.network.api.api_service.ApiService
-import com.migvidal.materialwiki.core.ui.DataResponse
-import com.migvidal.materialwiki.core.ui.RequestStatus
+import com.migvidal.materialwiki.core.ui.model.DataResponse
+import com.migvidal.materialwiki.core.ui.model.RequestStatus
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

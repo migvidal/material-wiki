@@ -1,4 +1,4 @@
-package com.migvidal.materialwiki.core.ui
+package com.migvidal.materialwiki.core.ui.model
 
 import java.time.Instant
 

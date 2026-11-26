@@ -1,5 +1,6 @@
 package com.migvidal.materialwiki.core.ui.components
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -25,7 +26,7 @@ import coil3.request.ImageRequest
 import com.migvidal.materialwiki.R
 import com.migvidal.materialwiki.core.USER_AGENT_KEY
 import com.migvidal.materialwiki.core.getUserAgent
-import com.migvidal.materialwiki.core.ui.RequestStatus
+import com.migvidal.materialwiki.core.ui.model.RequestStatus
 
 private const val DEFAULT_IMAGE_ASPECT_RATIO = 3 / 2f
 
@@ -62,7 +63,7 @@ fun CustomAsyncImage(
     val context = LocalContext.current
     val headers = NetworkHeaders.Builder().add(USER_AGENT_KEY, getUserAgent(context)).build()
 
-    val isVisible = isDataLoading || (imageStatus !is RequestStatus.Failure && urlOrNull != null)
+    val isVisible = imageStatus !is RequestStatus.Failure && urlOrNull != null
 
     Box(
         modifier = modifier
@@ -70,12 +71,11 @@ fun CustomAsyncImage(
             .then(boxModifier)
             .animateContentSize()
     ) {
-        val request = ImageRequest.Builder(context)
-            .data(urlOrNull)
-            .httpHeaders(headers)
-            .build()
-
         if (isVisible) {
+            val request = ImageRequest.Builder(context)
+                .data(urlOrNull)
+                .httpHeaders(headers)
+                .build()
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -84,7 +84,11 @@ fun CustomAsyncImage(
                 contentDescription = null,
                 onLoading = { imageStatus = RequestStatus.Loading },
                 onSuccess = { imageStatus = RequestStatus.Success },
-                onError = { imageStatus = RequestStatus.Failure() },
+                onError = {
+                    val t = it.result.throwable
+                    Log.e("Image", "Req: ${it.result.request.data}", t)
+                    imageStatus = RequestStatus.Failure()
+                },
             )
         } else {
             Surface(

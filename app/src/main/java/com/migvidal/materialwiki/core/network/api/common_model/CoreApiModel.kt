@@ -1,4 +1,6 @@
 package com.migvidal.materialwiki.core.network.api.common_model
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 interface Page {
@@ -31,11 +33,17 @@ data class ApiImage(
     override val width: Int,
     val source: String? = null,
     val url: String? = null,
-) : Sizeable
+) : Sizeable {
+    fun toDescriptor(): ImageDescriptor? {
+        val link = source ?: url ?: return null
+        return ImageDescriptor(height = height, width = width, url = link)
+    }
+}
 
 @Serializable
-data class ImageDto(
+@Parcelize
+data class ImageDescriptor(
     override val height: Int,
     override val width: Int,
-    val url: String?,
-): Sizeable
+    val url: String,
+): Sizeable, Parcelable

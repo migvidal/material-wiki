@@ -4,15 +4,26 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.window.core.layout.WindowSizeClass
+import com.migvidal.materialwiki.core.ui.model.Destination
 import com.migvidal.materialwiki.core.ui.theme.MaterialWikiTheme
-import com.migvidal.materialwiki.feature.feed.FeedUi
+import com.migvidal.materialwiki.screen.HomeScreen
+import com.migvidal.materialwiki.screen.SearchScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,9 +33,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MaterialWikiTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainScreen(modifier = Modifier.padding(innerPadding))
-                }
+                MainScreen()
             }
         }
     }
@@ -32,5 +41,40 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MainScreen(modifier: Modifier = Modifier) {
-    FeedUi(modifier = modifier)
+    var currentDestination by rememberSaveable { mutableStateOf(Destination.Home) }
+
+    val adaptiveInfo = currentWindowAdaptiveInfoV2()
+    val isAtLeastExpanded = adaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
+    val navType = if (isAtLeastExpanded) {
+        NavigationSuiteType.WideNavigationRailExpanded
+    } else {
+        NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptiveInfo)
+    }
+
+    NavigationSuiteScaffold(
+        modifier = modifier,
+        layoutType = navType,
+        navigationSuiteItems = {
+            Destination.entries.forEach {
+                item(
+                    selected = it == currentDestination,
+                    onClick = { currentDestination = it },
+                    icon = {
+                        Icon(
+                            painter = painterResource(it.icon),
+                            contentDescription = stringResource(it.contentDescription),
+                        )
+                    },
+                    label = {
+                        Text(text = stringResource(it.label))
+                    }
+                )
+            }
+        }
+    ) {
+        when (currentDestination) {
+            Destination.Home -> HomeScreen()
+            Destination.Search -> SearchScreen()
+        }
+    }
 }

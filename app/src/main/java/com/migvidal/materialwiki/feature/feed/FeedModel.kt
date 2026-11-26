@@ -1,7 +1,9 @@
 package com.migvidal.materialwiki.feature.feed
 
+import android.os.Parcelable
 import com.migvidal.materialwiki.core.network.api.common_model.ApiImage
 import com.migvidal.materialwiki.core.network.api.common_model.Page
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -32,7 +34,7 @@ data class FeedModel(
         @SerialName("filepage") val filePage: String? = null,
         val artist: TextWrapper,
         val credit: TextWrapper,
-        val description: TextWrapper,
+        val description: TextWrapper? = null,
     ) {
         @Serializable
         data class TextWrapper(val html: String, val text: String)
@@ -88,7 +90,8 @@ sealed interface Article {
 }
 
 @Serializable
+@Parcelize
 data class Titles(
     val canonical: String,
     val normalized: String,
-)
+): Parcelable

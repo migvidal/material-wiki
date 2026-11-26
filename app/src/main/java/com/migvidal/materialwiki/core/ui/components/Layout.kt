@@ -1,5 +1,6 @@
 package com.migvidal.materialwiki.core.ui.components
 
+import android.os.Parcelable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.migvidal.materialwiki.R
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,4 +114,5 @@ fun MostReadInfo(mostRead: MostRead, isLoading: Boolean, modifier: Modifier = Mo
     }
 }
 
-data class MostRead(val rank: Int, val views: Int)
+@Parcelize
+data class MostRead(val rank: Int, val views: Int): Parcelable

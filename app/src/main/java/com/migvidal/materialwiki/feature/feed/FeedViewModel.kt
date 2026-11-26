@@ -25,6 +25,10 @@ class FeedViewModel @Inject constructor(
     fun fetchFeed() {
         viewModelScope.launch { feedProvider.fetchFeed() }
     }
+
+    init {
+        fetchFeed()
+    }
 }
 
 data class FeedState(

@@ -4,6 +4,7 @@ plugins {
     kotlin("plugin.serialization") version libs.versions.serialization
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.hilt.android)
+    id("org.jetbrains.kotlin.plugin.parcelize")
 }
 
 android {
@@ -80,5 +81,6 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.okhttp)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.bundles.compose.adaptive)
 
 }
